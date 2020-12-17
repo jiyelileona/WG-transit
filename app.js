@@ -34,7 +34,27 @@ const getStopData = key => {
           `https://api.winnipegtransit.com/v3/stops/${stop.key}/schedule.json?api-key=JphSTlx53fKmdiS4jUb2&max-results-per-route=2`
         ).then(response => response.json())
       );
-      Promise.all(stopsData).then(msg => console.log(msg));
+      Promise.all(stopsData).then(data => {
+        data.map(item => {
+          let stopSchedual = item['stop-schedule'].stop;
+          let nameOfStop = stopSchedual.street.name;
+          let crossStreet = stopSchedual['cross-street']['name'];
+          let direction = stopSchedual.direction;
+          let routeSchedual = item['stop-schedule']['route-schedules'];
+          routeSchedual.map(item => {
+            let busNumber = item['route']['key'];
+            let arriveTime = item['scheduled-stops'][0]['times']['arrival']['scheduled'];
+
+            let stopInfo = {
+              name: `${nameOfStop}`,
+              crossStreet: `${crossStreet}`,
+              direction: `${direction}`,
+              busNumber: `${busNumber}`,
+              arriveTime: `${arriveTime}`,
+            };
+          });
+        });
+      });
     });
   });
 };

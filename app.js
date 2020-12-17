@@ -52,6 +52,8 @@ const getStopData = key => {
               busNumber: `${busNumber}`,
               arriveTime: `${arriveTime}`,
             };
+
+            createHTMLOfResults(stopInfo);
           });
         });
       });
@@ -68,10 +70,27 @@ const createHTMLOfStreets = street => {
   );
 };
 
+const createHTMLOfResults = stop => {
+  table.insertAdjacentHTML(
+    'beforeend',
+    `
+  <tr>
+    <td>${stop.name}</td>
+    <td>${stop.crossStreet}</td>
+    <td>${stop.direction}</td>
+    <td>${stop.busNumber}</td>
+    <td>${stop.arriveTime}</td>
+  </tr>
+  `
+  );
+};
+
 const streetList = document.querySelector('.streets');
 const input = document.querySelector('input[type="text"]');
+const table = document.querySelector('tbody');
 
 streetList.innerHTML = '';
+table.innerHTML = '';
 
 input.addEventListener('keypress', e => {
   if (e.keyCode == 13) {

@@ -39,6 +39,8 @@ const createHTMLOfStreets = street => {
 const streetList = document.querySelector('.streets');
 const input = document.querySelector('input[type="text"]');
 
+streetList.innerHTML = '';
+
 input.addEventListener('keypress', e => {
   if (e.keyCode == 13) {
     e.preventDefault();

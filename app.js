@@ -28,7 +28,12 @@ const getStreetData = streetName => {
 };
 
 const createHTMLOfStreets = street => {
-  console.log(street);
+  streetList.insertAdjacentHTML(
+    'beforeend',
+    `
+    <a href="#" data-street-key="${street.dataKey}">${street.name}</a>
+  `
+  );
 };
 
 const streetList = document.querySelector('.streets');

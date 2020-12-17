@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 const getStreetData = streetName => {
   fetch(
     `https://api.winnipegtransit.com/v3/streets.json?api-key=JphSTlx53fKmdiS4jUb2&name=${streetName}&usage=long`
@@ -79,7 +81,7 @@ const createHTMLOfResults = stop => {
     <td>${stop.crossStreet}</td>
     <td>${stop.direction}</td>
     <td>${stop.busNumber}</td>
-    <td>${stop.arriveTime}</td>
+    <td>${moment(stop.arriveTime).format('LT')}</td>
   </tr>
   `
   );

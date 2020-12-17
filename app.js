@@ -90,13 +90,16 @@ const createHTMLOfResults = stop => {
 const streetList = document.querySelector('.streets');
 const input = document.querySelector('input[type="text"]');
 const table = document.querySelector('tbody');
+const streetName = document.querySelector('#street-name');
 
 streetList.innerHTML = '';
 table.innerHTML = '';
+streetName.innerHTML = '';
 
 input.addEventListener('keypress', e => {
   if (e.keyCode == 13) {
     e.preventDefault();
+    streetList.innerHTML = '';
     getStreetData(input.value);
     input.value = '';
   }
@@ -104,7 +107,9 @@ input.addEventListener('keypress', e => {
 
 streetList.addEventListener('click', e => {
   if (e.target.tagName === 'A') {
+    table.innerHTML = '';
     const key = e.target.getAttribute('data-street-key');
+    streetName.innerHTML = `Displaying results for ${e.target.innerHTML}`
     getStopData(key);
   }
 });

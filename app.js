@@ -48,3 +48,9 @@ input.addEventListener('keypress', e => {
     input.value = '';
   }
 });
+
+streetList.addEventListener('click', e => {
+  if (e.target.tagName === 'A') {
+    const key = e.target.getAttribute('data-street-key');
+  }
+});

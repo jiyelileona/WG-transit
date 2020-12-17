@@ -10,6 +10,13 @@ const getStreetData = streetName => {
     }
 
     response.json().then(data => {
+      console.log(data);
+      if (data.streets.length === 0) {
+        streetList.insertAdjacentHTML(
+          'beforeend',
+          '<div class="no-results">No Streets Found</div>'
+        );
+      }
       data.streets.map(streets => {
         let streetInfo = {
           name: `${streets.name}`,
@@ -109,7 +116,7 @@ streetList.addEventListener('click', e => {
   if (e.target.tagName === 'A') {
     table.innerHTML = '';
     const key = e.target.getAttribute('data-street-key');
-    streetName.innerHTML = `Displaying results for ${e.target.innerHTML}`
+    streetName.innerHTML = `Displaying results for ${e.target.innerHTML}`;
     getStopData(key);
   }
 });

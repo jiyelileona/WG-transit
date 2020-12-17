@@ -10,7 +10,11 @@ const getStreetData = streetName => {
     response.json().then(data => {
       let streetData = data.streets
         .map(streets => {
-          console.log(streets.name);
+          let streetInfo = {
+            name: `${streets.name}`,
+            dataKey: `${streets.key}`,
+          };
+          createHTMLOfStreets(streetInfo);
           return streets.key;
         })
         .map(key =>
@@ -23,5 +27,17 @@ const getStreetData = streetName => {
   });
 };
 
+const createHTMLOfStreets = street => {
+  console.log(street);
+};
 
-getStreetData('chancellor');
+const streetList = document.querySelector('.streets');
+const input = document.querySelector('input[type="text"]');
+
+input.addEventListener('keypress', e => {
+  if (e.keyCode == 13) {
+    e.preventDefault();
+    getStreetData(input.value);
+    input.value = '';
+  }
+});

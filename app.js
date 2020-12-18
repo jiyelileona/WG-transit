@@ -10,7 +10,6 @@ const getStreetData = streetName => {
     }
 
     response.json().then(data => {
-      console.log(data);
       if (data.streets.length === 0) {
         streetList.insertAdjacentHTML(
           'beforeend',
@@ -23,7 +22,6 @@ const getStreetData = streetName => {
           dataKey: `${streets.key}`,
         };
         createHTMLOfStreets(streetInfo);
-        console.log(streets.key);
       });
     });
   });

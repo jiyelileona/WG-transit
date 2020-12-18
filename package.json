@@ -2,5 +2,15 @@
   "dependencies": {
     "m": "^1.5.6",
     "moment": "^2.29.1"
+  },
+  "scripts": {
+    "clean": "rimraf .cache dist",
+    "build": "parcel build ./index.html",
+    "start": "parcel ./index.html",
+    "surge": "surge -d https://leo-wgtransit.surge.sh dist",
+    "deploy": "run-s clean build surge"
+  },
+  "devDependencies": {
+    "cssnano": "^4.1.10"
   }
 }

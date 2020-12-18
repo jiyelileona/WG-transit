@@ -1,5 +1,4 @@
 const moment = require('moment');
-const _ = require('lodash');
 
 const getStreetData = streetName => {
   fetch(
@@ -42,30 +41,32 @@ const getStopData = key => {
           `https://api.winnipegtransit.com/v3/stops/${stop.key}/schedule.json?api-key=JphSTlx53fKmdiS4jUb2&max-results-per-route=2`
         ).then(response => response.json())
       );
-      Promise.all(stopsData).then(data => {
-        data.map(item => {
-          let stopSchedual = item['stop-schedule'].stop;
-          let nameOfStop = stopSchedual.street.name;
-          let crossStreet = stopSchedual['cross-street']['name'];
-          let direction = stopSchedual.direction;
-          let routeSchedual = item['stop-schedule']['route-schedules'];
-          routeSchedual.map(item => {
-            let busNumber = item['route']['key'];
-            let stops = item['scheduled-stops'];
-            stops.map(stop => {
-              let arriveTime = stop.times.arrival.scheduled;
+      Promise.all(stopsData).then(stopdata => getSchedual(stopdata));
+    });
+  });
+};
 
-              let stopInfo = {
-                name: `${nameOfStop}`,
-                crossStreet: `${crossStreet}`,
-                direction: `${direction}`,
-                busNumber: `${busNumber}`,
-                arriveTime: `${arriveTime}`,
-              };
-              createHTMLOfResults(stopInfo);
-            });
-          });
-        });
+const getSchedual = data => {
+  data.map(item => {
+    let stopSchedual = item['stop-schedule'].stop;
+    let nameOfStop = stopSchedual.street.name;
+    let crossStreet = stopSchedual['cross-street']['name'];
+    let direction = stopSchedual.direction;
+    let routeSchedual = item['stop-schedule']['route-schedules'];
+    routeSchedual.map(item => {
+      let busNumber = item['route']['key'];
+      let stops = item['scheduled-stops'];
+      stops.map(stop => {
+        let arriveTime = stop.times.arrival.scheduled;
+
+        let stopInfo = {
+          name: `${nameOfStop}`,
+          crossStreet: `${crossStreet}`,
+          direction: `${direction}`,
+          busNumber: `${busNumber}`,
+          arriveTime: `${arriveTime}`,
+        };
+        createHTMLOfResults(stopInfo);
       });
     });
   });

@@ -50,17 +50,19 @@ const getStopData = key => {
           let routeSchedual = item['stop-schedule']['route-schedules'];
           routeSchedual.map(item => {
             let busNumber = item['route']['key'];
-            let arriveTime = item['scheduled-stops'][0]['times']['arrival']['scheduled'];
+            let stops = item['scheduled-stops'];
+            stops.map(stop => {
+              let arriveTime = stop.times.arrival.scheduled;
 
-            let stopInfo = {
-              name: `${nameOfStop}`,
-              crossStreet: `${crossStreet}`,
-              direction: `${direction}`,
-              busNumber: `${busNumber}`,
-              arriveTime: `${arriveTime}`,
-            };
-
-            createHTMLOfResults(stopInfo);
+              let stopInfo = {
+                name: `${nameOfStop}`,
+                crossStreet: `${crossStreet}`,
+                direction: `${direction}`,
+                busNumber: `${busNumber}`,
+                arriveTime: `${arriveTime}`,
+              };
+              createHTMLOfResults(stopInfo);
+            });
           });
         });
       });

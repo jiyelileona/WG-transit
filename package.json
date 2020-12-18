@@ -5,8 +5,8 @@
   },
   "scripts": {
     "clean": "rimraf .cache dist",
-    "build": "parcel build ./index.html",
-    "start": "parcel ./index.html",
+    "build": "parcel build ./src/index.html",
+    "start": "parcel ./src/index.html",
     "surge": "surge -d https://leo-wgtransit.surge.sh dist",
     "deploy": "run-s clean build surge"
   },

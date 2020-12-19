@@ -1,4 +1,5 @@
 const moment = require('moment');
+import {map} from 'lodash';
 
 const getStreetData = streetName => {
   fetch(
@@ -16,13 +17,7 @@ const getStreetData = streetName => {
           '<div class="no-results">No Streets Found</div>'
         );
       }
-      data.streets.map(streets => {
-        let streetInfo = {
-          name: `${streets.name}`,
-          dataKey: `${streets.key}`,
-        };
-        createHTMLOfStreets(streetInfo);
-      });
+      map(data.streets, createHTMLOfStreets);
     });
   });
 };
@@ -41,32 +36,23 @@ const getStopData = key => {
           `https://api.winnipegtransit.com/v3/stops/${stop.key}/schedule.json?api-key=JphSTlx53fKmdiS4jUb2&max-results-per-route=2`
         ).then(response => response.json())
       );
-      Promise.all(stopsData).then(stopdata => getSchedual(stopdata));
+      Promise.all(stopsData).then(stopdata => getSchedual(map(stopdata, 'stop-schedule')));
     });
   });
 };
 
 const getSchedual = data => {
   data.map(item => {
-    let stopSchedual = item['stop-schedule'].stop;
-    let nameOfStop = stopSchedual.street.name;
-    let crossStreet = stopSchedual['cross-street']['name'];
-    let direction = stopSchedual.direction;
-    let routeSchedual = item['stop-schedule']['route-schedules'];
-    routeSchedual.map(item => {
-      let busNumber = item['route']['key'];
-      let stops = item['scheduled-stops'];
-      stops.map(stop => {
-        let arriveTime = stop.times.arrival.scheduled;
-
-        let stopInfo = {
-          name: `${nameOfStop}`,
-          crossStreet: `${crossStreet}`,
-          direction: `${direction}`,
-          busNumber: `${busNumber}`,
-          arriveTime: `${arriveTime}`,
-        };
-        createHTMLOfResults(stopInfo);
+    let stopSchedual = item.stop;
+    item['route-schedules'].map(route => {
+      route['scheduled-stops'].map(stop => {
+        createHTMLOfResults({
+          name: `${stopSchedual.street.name}`,
+          crossStreet: `${stopSchedual['cross-street']['name']}`,
+          direction: `${stopSchedual.direction}`,
+          busNumber: `${route['route']['key']}`,
+          arriveTime: `${stop.times.arrival.scheduled}`,
+        });
       });
     });
   });
@@ -76,7 +62,7 @@ const createHTMLOfStreets = street => {
   streetList.insertAdjacentHTML(
     'beforeend',
     `
-    <a href="#" data-street-key="${street.dataKey}">${street.name}</a>
+    <a href="#" data-street-key="${street.key}">${street.name}</a>
   `
   );
 };

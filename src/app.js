@@ -1,43 +1,40 @@
 const moment = require('moment');
 import {map} from 'lodash';
+import regeneratorRuntime from 'regenerator-runtime';
 const url = 'https://api.winnipegtransit.com/v3/';
 const apiKey = '.json?api-key=JphSTlx53fKmdiS4jUb2&';
 
-const getStreetData = streetName => {
-  fetch(`${url}streets${apiKey}name=${streetName}&usage=long`).then(response => {
-    if (response.status !== 200) {
-      console.log("There's an error. Status code: " + response.status);
-      return;
+const getStreetData = async streetName => {
+  try {
+    const streets = await fetch(`${url}streets${apiKey}name=${streetName}&usage=long`);
+    const data = await streets.json();
+    if (data.streets.length === 0) {
+      streetList.insertAdjacentHTML('beforeend', '<div class="no-results">No Streets Found</div>');
     }
-    response.json().then(data => {
-      if (data.streets.length === 0) {
-        streetList.insertAdjacentHTML(
-          'beforeend',
-          '<div class="no-results">No Streets Found</div>'
-        );
-      }
-      map(data.streets, createHTMLOfStreets);
-    });
-  });
+    map(data.streets, createHTMLOfStreets);
+  } catch (err) {
+    return "There's an error: " + err;
+  }
 };
 
-const getStopData = key => {
-  fetch(`${url}stops${apiKey}street=${key}`).then(response => {
-    if (response.status !== 200) {
-      console.log("There's an error. Status code: " + response.status);
-      return;
-    }
-    response.json().then(data => getRouteData(data.stops));
-  });
+const getStopData = async key => {
+  try {
+    const stops = await fetch(`${url}stops${apiKey}street=${key}`);
+    const data = await stops.json();
+    getRouteData(data.stops);
+  } catch (err) {
+    return "There's an error: " + err;
+  }
 };
 
-const getRouteData = stops => {
-  let stopsData = stops.map(stop =>
-    fetch(`${url}stops/${stop.key}/schedule${apiKey}max-results-per-route=2`).then(response =>
-      response.json()
+const getRouteData = async stops => {
+  const data = stops.map(stop =>
+    fetch(`${url}stops/${stop.key}/schedule${apiKey}max-results-per-route=2`).then(res =>
+      res.json()
     )
   );
-  Promise.all(stopsData).then(stopdata => getSchedual(map(stopdata, 'stop-schedule')));
+  const stopsData = await Promise.all(data);
+  getSchedual(map(stopsData, 'stop-schedule'));
 };
 
 const getSchedual = data => {

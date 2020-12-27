@@ -1,12 +1,11 @@
 const moment = require('moment');
 import {map} from 'lodash';
 import regeneratorRuntime from 'regenerator-runtime';
-const url = 'https://api.winnipegtransit.com/v3/';
-const apiKey = '.json?api-key=JphSTlx53fKmdiS4jUb2&';
+import getURL from './url';
 
 const getStreetData = async streetName => {
   try {
-    const streets = await fetch(`${url}streets${apiKey}name=${streetName}&usage=long`);
+    const streets = await fetch(`${getURL('streets', {name: streetName, usage: 'long'})}`);
     const data = await streets.json();
     if (data.streets.length === 0) {
       streetList.insertAdjacentHTML('beforeend', '<div class="no-results">No Streets Found</div>');
@@ -19,7 +18,7 @@ const getStreetData = async streetName => {
 
 const getStopData = async key => {
   try {
-    const stops = await fetch(`${url}stops${apiKey}street=${key}`);
+    const stops = await fetch(`${getURL('stops', {street: key})}`);
     const data = await stops.json();
     getRouteData(data.stops);
   } catch (err) {
@@ -29,7 +28,7 @@ const getStopData = async key => {
 
 const getRouteData = async stops => {
   const data = stops.map(stop =>
-    fetch(`${url}stops/${stop.key}/schedule${apiKey}max-results-per-route=2`).then(res =>
+    fetch(`${getURL(`stops/${stop.key}/schedule`, {'max-results-per-route': 2})}`).then(res =>
       res.json()
     )
   );

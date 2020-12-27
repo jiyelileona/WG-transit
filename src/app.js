@@ -33,18 +33,18 @@ const getRouteData = async stops => {
     )
   );
   const stopsData = await Promise.all(data);
-  getSchedual(map(stopsData, 'stop-schedule'));
+  getSchedule(map(stopsData, 'stop-schedule'));
 };
 
-const getSchedual = data => {
+const getSchedule = data => {
   data.map(item => {
-    let stopSchedual = item.stop;
+    let stopSchedule = item.stop;
     item['route-schedules'].map(route => {
       route['scheduled-stops'].map(stop => {
         createHTMLOfResults({
-          name: `${stopSchedual.street.name}`,
-          crossStreet: `${stopSchedual['cross-street']['name']}`,
-          direction: `${stopSchedual.direction}`,
+          name: `${stopSchedule.street.name}`,
+          crossStreet: `${stopSchedule['cross-street']['name']}`,
+          direction: `${stopSchedule.direction}`,
           busNumber: `${route['route']['key']}`,
           arriveTime: `${stop.times.arrival.scheduled}`,
         });
